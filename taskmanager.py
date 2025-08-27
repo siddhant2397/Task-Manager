@@ -93,6 +93,9 @@ if login_btn:
         st.session_state.username = user["username"]
         st.session_state.role = user["role"]
         st.sidebar.success(f"Welcome, {user['username']}!")
+        st.session_state["login_username"] = ""
+        st.session_state["login_password"] = ""
+        st.rerun()
     else:
         st.sidebar.error("Incorrect credentials!")
 def logout_callback():
