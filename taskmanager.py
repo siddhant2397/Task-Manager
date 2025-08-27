@@ -204,8 +204,10 @@ if st.session_state.get("logged_in"):
     elif st.session_state.role == "section_ic":
         st.subheader("Your Section's Tasks")
         tasks = fetch_tasks(assigned_to=st.session_state.username)
-        if tasks:
-            for task in tasks:
+        status_order = {"Pending": 0, "Completed": 1}
+        tasks_sorted = sorted(tasks, key=lambda task: status_order.get(task['status'], 99))
+        if tasks_sorted:
+            for task in tasks_sorted:
                 with st.form(key=f"form_{task['_id']}"):
                     st.markdown(f'<h6 style="color:black;">Assigned Task : {task["description"]}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Section : {task["section"]}</h6>', unsafe_allow_html=True)
