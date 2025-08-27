@@ -212,14 +212,12 @@ if st.session_state.get("logged_in"):
                     st.markdown(f'<h6 style="color:black;">Last Updated on : {task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Task Status : {task['status']}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Last Remark : {task.get('remark', '')}</h6>', unsafe_allow_html=True)
-                    st.markdown('<label style="font-weight: bold; font-size:16px; color: black;">Change Status</label>', unsafe_allow_html=True)
                     new_status = st.selectbox(
-                        "",
+                        "Change Status",
                         ["Pending", "Completed"],
                         index=["Pending", "Completed"].index(task['status'])
                     )
-                    st.markdown('<label style="font-weight: bold; font-size:16px; color: black;">Add/Update Remark</label>', unsafe_allow_html=True)
-                    new_remark = st.text_area("", value=task.get('remark', ''))
+                    new_remark = st.text_area("Add/Update Remark", value=task.get('remark', ''))
                     submitted = st.form_submit_button("Update Status")
                     if submitted:
                         update_task(task["_id"], new_status, new_remark)
