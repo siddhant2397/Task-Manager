@@ -59,6 +59,7 @@ def insert_task(section, description, assigned_to):
         "status": "Pending",
         "remark": "",
         "last_update": datetime.now().strftime("%Y-%m-%d"),
+        "assigned_date": datetime.now().strftime("%Y-%m-%d"),
         "assigned_to": assigned_to
     })
 
@@ -146,13 +147,12 @@ if st.session_state.get("logged_in"):
         if tasks:
             for task in tasks:
                 with st.form(key=f"form_{task['_id']}"):
-                    st.markdown(f'<h4 style="color:black;">{task["description"]}</h4>', unsafe_allow_html=True)
-                    st.markdown(f'<h4 style="color:black;">{task["section"]}</h4>', unsafe_allow_html=True)
-                    st.markdown(f'<h4 style="color:black;">{task.get('last_update', '-')}</h4>', unsafe_allow_html=True)
-                    st.markdown(f'<h4 style="color:black;">{task['status']}</h4>', unsafe_allow_html=True)
-                    st.markdown(f'<h4 style="color:black;">{task.get('remark', '')}</h4>', unsafe_allow_html=True)
-                    st.markdown(f"**Current Status:** :blue[{task['status']}] (Last updated: {task.get('last_update', '-')})")
-                    st.markdown(f"**Current Remark:** _{task.get('remark', '')}_")
+                    st.markdown(f'<h6 style="color:black;">{task["description"]}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">{task["section"]}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">{task.get("assigned_date", "-")}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">{task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">{task['status']}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">{task.get('remark', '')}</h6>', unsafe_allow_html=True)
                     new_status = st.selectbox(
                         "Change Status",
                         ["Pending", "In Progress", "Completed"],
