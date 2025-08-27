@@ -73,8 +73,8 @@ st.markdown("""
 
 # Login Interface
 st.sidebar.header("Login")
-username = st.sidebar.text_input("Username")
-password = st.sidebar.text_input("Password", type="password")
+username = st.sidebar.text_input("Username", key = "login_username)
+password = st.sidebar.text_input("Password", type="password", key = "login_password")
 login_btn = st.sidebar.button("Login")
 
 if 'logged_in' not in st.session_state:
@@ -95,10 +95,10 @@ if st.session_state.get("logged_in"):
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.role = None
-        if "username" in st.session_state:
-            del st.session_state["username"]
-        if "password" in st.session_state:
-            del st.session_state["password"]
+        if "login_username" in st.session_state:
+            del st.session_state["login_username"]
+        if "login_password" in st.session_state:
+            del st.session_state["login_password"]
         st.rerun()  # Refresh page to show login screen
 
 
