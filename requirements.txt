@@ -3,4 +3,6 @@ pandas
 openpyxl
 pymongo
 bcrypt
+matplotlib
+
 
