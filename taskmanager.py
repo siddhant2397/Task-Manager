@@ -157,7 +157,7 @@ if st.session_state.get("logged_in"):
                     dff = dff.drop(columns=["_id"])
                 st.dataframe(dff.style.applymap(
                     lambda v: 'color: green' if v == 'Completed' else
-                    ('color: orange' if v == 'In Progress' else 'color: red'),
+                    ('color: red' if v == 'Pending' else ''),
                     subset=['status']
                 ))
             else:
@@ -213,12 +213,14 @@ if st.session_state.get("logged_in"):
                     st.markdown(f'<h6 style="color:black;">Last Updated on : {task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Task Status : {task['status']}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Last Remark : {task.get('remark', '')}</h6>', unsafe_allow_html=True)
+                    st.markdown('<label style="font-weight: bold; font-size:16px; color: black;">Change Status</label>', unsafe_allow_html=True)
                     new_status = st.selectbox(
-                        "Change Status",
-                        ["Pending", "In Progress", "Completed"],
-                        index=["Pending", "In Progress", "Completed"].index(task['status'])
+                        "",
+                        ["Pending", "Completed"],
+                        index=["Pending", "Completed"].index(task['status'])
                     )
-                    new_remark = st.text_area("Add/Update Remark", value=task.get('remark', ''))
+                    st.markdown('<label style="font-weight: bold; font-size:16px; color: black;">Add/Update Remark</label>', unsafe_allow_html=True)
+                    new_remark = st.text_area("", value=task.get('remark', ''))
                     submitted = st.form_submit_button("Update Status")
                     if submitted:
                         update_task(task["_id"], new_status, new_remark)
