@@ -136,11 +136,8 @@ if st.session_state.get("logged_in"):
             st.subheader("Allot a New Task to Section I/C")
             ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
             with st.form(key="allot_task_form"):
-                st.markdown('<h4 style="color:black;">Section Name</h4>', unsafe_allow_html=True)
                 section = st.text_input("Section Name")
-                st.markdown('<h4 style="color:black;">Task Description</h4>', unsafe_allow_html=True)
                 description = st.text_area("Task Description")
-                st.markdown('<h4 style="color:black;">Assign to</h4>', unsafe_allow_html=True)
                 assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
                 submit = st.form_submit_button("Allot Task")
                 if submit:
