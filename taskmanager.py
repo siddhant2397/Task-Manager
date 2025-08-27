@@ -177,8 +177,8 @@ if st.session_state.get("logged_in"):
             ax1.set_ylabel("Number of Pending Tasks")
             
             df_completed = df[df['status'] == 'Completed'].copy()
-            df_completed['completion_time'] = (df_completed['last_update'] - df_completed['assigned_date']).dt.days
-            df_completed['month'] = df_completed['last_update'].dt.to_period('M').dt.to_timestamp()
+            df_completed['completion_time'] = (df_completed['completed_date'] - df_completed['assigned_date']).dt.days
+            df_completed['month'] = df_completed['completed_date'].dt.to_period('M').dt.to_timestamp()
             avg_completion = df_completed.groupby(['month', 'section'])['completion_time'].mean().unstack()
             fig2, ax2 = plt.subplots()
             avg_completion.plot(ax=ax2)
