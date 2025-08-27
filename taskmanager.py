@@ -13,7 +13,7 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # MongoDB configuration - update with your connection details or use Streamlit secrets
-MONGO_URI = "mongodb://localhost:27017"  # Change to your MongoDB URI
+MONGO_URI = st.secrets["mongo_DB"]  # Change to your MongoDB URI
 DB_NAME = "tasktracker"
 USERS_COLLECTION = "users"
 TASKS_COLLECTION = "tasks"
