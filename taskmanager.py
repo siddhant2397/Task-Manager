@@ -11,6 +11,7 @@ import streamlit as st
 import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
+import bcrypt
 
 # MongoDB configuration - update with your connection details or use Streamlit secrets
 MONGO_URI = st.secrets["mongo_DB"]  # Change to your MongoDB URI
@@ -25,10 +26,14 @@ def get_db():
     return client[DB_NAME]
 
 # Authentication check
-def login_user(username, password):
+def login_user(username):
     db = get_db()
-    user = db[USERS_COLLECTION].find_one({"username": username, "password": password})
+    user = db[USERS_COLLECTION].find_one({"username": username})
     return user
+
+def verify_password(plain_password, hashed_password):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
 
 def fetch_tasks(section=None, assigned_to=None):
     db = get_db()
@@ -82,8 +87,8 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 if login_btn:
-    user = login_user(username, password)
-    if user:
+    user = login_user(username)
+    if user and verify_password(password, user["password"]):
         st.session_state.logged_in = True
         st.session_state.username = user["username"]
         st.session_state.role = user["role"]
