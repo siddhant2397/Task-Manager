@@ -147,6 +147,10 @@ if st.session_state.get("logged_in"):
             for task in tasks:
                 with st.form(key=f"form_{task['_id']}"):
                     st.markdown(f'<h4 style="color:black;">{task["description"]}</h4>', unsafe_allow_html=True)
+                    st.markdown(f'<h4 style="color:black;">{task["section"]}</h4>', unsafe_allow_html=True)
+                    st.markdown(f'<h4 style="color:black;">{task.get('last_update', '-')}</h4>', unsafe_allow_html=True)
+                    st.markdown(f'<h4 style="color:black;">{task['status']}</h4>', unsafe_allow_html=True)
+                    st.markdown(f'<h4 style="color:black;">{task.get('remark', '')}</h4>', unsafe_allow_html=True)
                     st.markdown(f"**Current Status:** :blue[{task['status']}] (Last updated: {task.get('last_update', '-')})")
                     st.markdown(f"**Current Remark:** _{task.get('remark', '')}_")
                     new_status = st.selectbox(
