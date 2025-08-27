@@ -95,7 +95,7 @@ if st.session_state.get("logged_in"):
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.role = None
-        st.experimental_rerun()  # Refresh page to show login screen
+        st.rerun()  # Refresh page to show login screen
 
 
 # Main App workflow
