@@ -102,8 +102,6 @@ def on_login():
         st.sidebar.error("Incorrect credentials!")
 
 # Inputs with keys
-username = st.sidebar.text_input("Username", key="login_username")
-password = st.sidebar.text_input("Password", type="password", key="login_password")
 
 # Login button with callback, not just boolean check
 login_btn = st.sidebar.button("Login", on_click=on_login)
