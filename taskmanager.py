@@ -12,6 +12,7 @@ import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
 import bcrypt
+import matplotlib.pyplot as plt
 
 # MongoDB configuration - update with your connection details or use Streamlit secrets
 MONGO_URI = st.secrets["mongo_DB"]  # Change to your MongoDB URI
@@ -130,7 +131,7 @@ if st.session_state.get("logged_in"):
     db = get_db()
 
     if st.session_state.role == "officer":
-        tab1, tab2 = st.tabs(["Task Assignment", "Dashboard"])
+        tab1, tab2, tab3 = st.tabs(["Task Assignment", "Dashboard", "Analysis"])
         with tab1:
             st.subheader("Allot a New Task to Section I/C")
             ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
@@ -146,28 +147,14 @@ if st.session_state.get("logged_in"):
                     insert_task(section, description, assigned_to)
                     st.success("Task allotted successfully!")
 
-        #st.subheader("Allot a New Task to Section I/C")
-        #ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
-
-        #with st.form(key="allot_task_form"):
-            #st.markdown('<h4 style="color:black;">Section Name</h4>', unsafe_allow_html=True)
-            #section = st.text_input("Section Name")
-            #st.markdown('<h4 style="color:black;">Task Description</h4>', unsafe_allow_html=True)
-            #description = st.text_area("Task Description")
-            #st.markdown('<h4 style="color:black;">Assign to</h4>', unsafe_allow_html=True)
-            #assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
-            #submit = st.form_submit_button("Allot Task")
-            #if submit:
-                #insert_task(section, description, assigned_to)
-                #st.success("Task allotted successfully!")
         with tab2:
             st.subheader("All Section Tasks: Oversight Dashboard")
             tasks = fetch_tasks()
             if tasks:
-                df = pd.DataFrame(tasks)
-                if "_id" in df.columns:
-                    df = df.drop(columns=["_id"])
-                st.dataframe(df.style.applymap(
+                dff = pd.DataFrame(tasks)
+                if "_id" in dff.columns:
+                    dff = dff.drop(columns=["_id"])
+                st.dataframe(dff.style.applymap(
                     lambda v: 'color: green' if v == 'Completed' else
                     ('color: orange' if v == 'In Progress' else 'color: red'),
                     subset=['status']
@@ -175,22 +162,44 @@ if st.session_state.get("logged_in"):
             else:
                 st.info("No tasks found.")
 
+        with tab3:
+            tasks_cursor = db[TASKS_COLLECTION].find({})
+            tasks_list = list(tasks_cursor)
+            df = pd.DataFrame(tasks_list)
+            df['assigned_date'] = pd.to_datetime(df['assigned_date'], errors='coerce')
+            df['completed_date'] = pd.to_datetime(df['last_update'], errors='coerce')
+            
+            pending_counts = df[df['status'] == 'Pending'].groupby('section').size()
+            fig1, ax1 = plt.subplots()
+            pending_counts.plot(kind='bar', ax=ax1, color='orange')
+            ax1.set_title("Pending Tasks by Section")
+            ax1.set_xlabel("Section")
+            ax1.set_ylabel("Number of Pending Tasks")
+            
+            df_completed = df[df['status'] == 'Completed'].copy()
+            df_completed['completion_time'] = (df_completed['last_update'] - df_completed['assigned_date']).dt.days
+            df_completed['month'] = df_completed['last_update'].dt.to_period('M').dt.to_timestamp()
+            avg_completion = df_completed.groupby(['month', 'section'])['completion_time'].mean().unstack()
+            fig2, ax2 = plt.subplots()
+            avg_completion.plot(ax=ax2)
+            ax2.set_title("Average Completion Time per Month by Section")
+            ax2.set_xlabel("Month")
+            ax2.set_ylabel("Average Completion Time (days)")
+            
+            total_tasks = df.groupby('section').size()
+            completed_tasks = df[df['status'] == 'Completed'].groupby('section').size()
+            completion_pct = (completed_tasks / total_tasks * 100).fillna(0)
+            fig3, ax3 = plt.subplots()
+            completion_pct.plot(kind='bar', ax=ax3, color='green')
+            ax3.set_title("Task Completion Percentage by Section")
+            ax3.set_xlabel("Section")
+            ax3.set_ylabel("Completion Percentage (%)")
+            st.pyplot(fig1)
+            st.pyplot(fig2)
+            st.pyplot(fig3)
 
         
-        #st.subheader("All Section Tasks: Oversight Dashboard")
-        #tasks = fetch_tasks()
-        #if tasks:
-            #df = pd.DataFrame(tasks)
-            #if "_id" in df.columns:
-                #df = df.drop(columns=["_id"])
-            #st.dataframe(df.style.applymap(
-                #lambda v: 'color: green' if v == 'Completed' else
-                #('color: orange' if v == 'In Progress' else 'color: red'),
-                #subset=['status']
-            #))
-        #else:
-            #st.info("No tasks found.")
-
+        
     elif st.session_state.role == "section_ic":
         st.subheader("Your Section's Tasks")
         tasks = fetch_tasks(assigned_to=st.session_state.username)
