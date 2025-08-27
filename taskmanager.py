@@ -95,6 +95,10 @@ if st.session_state.get("logged_in"):
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.role = None
+        if "username" in st.session_state:
+            del st.session_state["username"]
+        if "password" in st.session_state:
+            del st.session_state["password"]
         st.rerun()  # Refresh page to show login screen
 
 
