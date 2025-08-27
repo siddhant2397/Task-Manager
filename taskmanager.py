@@ -145,7 +145,8 @@ if st.session_state.get("logged_in"):
                 submit = st.form_submit_button("Allot Task")
                 if submit:
                     insert_task(section, description, assigned_to)
-                    st.success("Task allotted successfully!")
+                    st.markdown('<p style="color: green; font-weight: bold;">Task allotted successfully!</p>',
+                                unsafe_allow_html=True)
 
         with tab2:
             st.subheader("All Section Tasks: Oversight Dashboard")
