@@ -147,12 +147,12 @@ if st.session_state.get("logged_in"):
         if tasks:
             for task in tasks:
                 with st.form(key=f"form_{task['_id']}"):
-                    st.markdown(f'<h6 style="color:black;">{task["description"]}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">{task["section"]}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">{task.get("assigned_date", "-")}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">{task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">{task['status']}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">{task.get('remark', '')}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Assigned Task:{task["description"]}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Section:{task["section"]}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Assigned Date:{task.get("assigned_date", "-")}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Last Updated on:{task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Task Status:{task['status']}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Last Remark:{task.get('remark', '')}</h6>', unsafe_allow_html=True)
                     new_status = st.selectbox(
                         "Change Status",
                         ["Pending", "In Progress", "Completed"],
