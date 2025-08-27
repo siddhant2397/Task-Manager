@@ -222,7 +222,9 @@ if st.session_state.get("logged_in"):
                     submitted = st.form_submit_button("Update Status")
                     if submitted:
                         update_task(task["_id"], new_status, new_remark)
-                        st.success("Status and remark updated!")
+                        st.markdown('<p style="color: green; font-weight: bold;">Status and remark updated!</p>',
+                                    unsafe_allow_html=True)
+                        
         else:
             st.info("No tasks assigned to you.")
 
