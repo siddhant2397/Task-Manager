@@ -1,8 +1,4 @@
-﻿streamlit
-langchain
-faiss-cpu
-PyMuPDF
+streamlit
 pandas
-unstructured
-sentence-transformers
-huggingface-hub
+openpyxl
+pymongo
