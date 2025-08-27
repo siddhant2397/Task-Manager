@@ -81,7 +81,7 @@ st.markdown("""
 st.sidebar.header("Login")
 username = st.sidebar.text_input("Username", key = "login_username", value=st.session_state.get("login_username", ""))
 password = st.sidebar.text_input("Password", type="password", key = "login_password", value=st.session_state.get("login_password", ""))
-login_btn = st.sidebar.button("Login")
+
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
