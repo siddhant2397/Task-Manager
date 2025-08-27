@@ -86,18 +86,31 @@ login_btn = st.sidebar.button("Login")
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
-if login_btn:
+def on_login():
     user = login_user(username)
-    if user and verify_password(password, user["password"]):
+    if user and verify_password(st.session_state.login_password, user["password"]):
         st.session_state.logged_in = True
         st.session_state.username = user["username"]
         st.session_state.role = user["role"]
-        st.sidebar.success(f"Welcome, {user['username']}!")
-        st.session_state["login_username"] = ""
-        st.session_state["login_password"] = ""
+        st.sidebar.success(f"Welcome, {user['username']}")
+        
+        # Clear inputs immediately in session state
+        st.session_state.login_username = ""
+        st.session_state.login_password = ""
         st.rerun()
     else:
         st.sidebar.error("Incorrect credentials!")
+
+# Inputs with keys
+username = st.sidebar.text_input("Username", key="login_username")
+password = st.sidebar.text_input("Password", type="password", key="login_password")
+
+# Login button with callback, not just boolean check
+login_btn = st.sidebar.button("Login", on_click=on_login)
+
+# Logout logic as before, can call st.experimental_rerun() to refresh UI
+
+
 def logout_callback():
     st.session_state.logged_in = False
     st.session_state.username = None
