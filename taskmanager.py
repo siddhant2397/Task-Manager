@@ -73,7 +73,7 @@ st.markdown("""
 
 # Login Interface
 st.sidebar.header("Login")
-username = st.sidebar.text_input("Username", key = "login_username)
+username = st.sidebar.text_input("Username", key = "login_username")
 password = st.sidebar.text_input("Password", type="password", key = "login_password")
 login_btn = st.sidebar.button("Login")
 
