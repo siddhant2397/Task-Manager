@@ -97,7 +97,6 @@ def on_login():
         # Clear inputs immediately in session state
         st.session_state.login_username = ""
         st.session_state.login_password = ""
-        st.rerun()
     else:
         st.sidebar.error("Incorrect credentials!")
 
