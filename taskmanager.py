@@ -130,34 +130,66 @@ if st.session_state.get("logged_in"):
     db = get_db()
 
     if st.session_state.role == "officer":
-        st.subheader("Allot a New Task to Section I/C")
-        ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
+        tab1, tab2 = st.tabs(["Task Assignment", "Dashboard"])
+        with tab1:
+            st.subheader("Allot a New Task to Section I/C")
+            ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
+            with st.form(key="allot_task_form"):
+                st.markdown('<h4 style="color:black;">Section Name</h4>', unsafe_allow_html=True)
+                section = st.text_input("Section Name")
+                st.markdown('<h4 style="color:black;">Task Description</h4>', unsafe_allow_html=True)
+                description = st.text_area("Task Description")
+                st.markdown('<h4 style="color:black;">Assign to</h4>', unsafe_allow_html=True)
+                assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
+                submit = st.form_submit_button("Allot Task")
+                if submit:
+                    insert_task(section, description, assigned_to)
+                    st.success("Task allotted successfully!")
 
-        with st.form(key="allot_task_form"):
-            st.markdown('<h4 style="color:black;">Section Name</h4>', unsafe_allow_html=True)
-            section = st.text_input("Section Name")
-            st.markdown('<h4 style="color:black;">Task Description</h4>', unsafe_allow_html=True)
-            description = st.text_area("Task Description")
-            st.markdown('<h4 style="color:black;">Assign to</h4>', unsafe_allow_html=True)
-            assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
-            submit = st.form_submit_button("Allot Task")
-            if submit:
-                insert_task(section, description, assigned_to)
-                st.success("Task allotted successfully!")
+        #st.subheader("Allot a New Task to Section I/C")
+        #ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
 
-        st.subheader("All Section Tasks: Oversight Dashboard")
-        tasks = fetch_tasks()
-        if tasks:
-            df = pd.DataFrame(tasks)
-            if "_id" in df.columns:
-                df = df.drop(columns=["_id"])
-            st.dataframe(df.style.applymap(
-                lambda v: 'color: green' if v == 'Completed' else
-                ('color: orange' if v == 'In Progress' else 'color: red'),
-                subset=['status']
-            ))
-        else:
-            st.info("No tasks found.")
+        #with st.form(key="allot_task_form"):
+            #st.markdown('<h4 style="color:black;">Section Name</h4>', unsafe_allow_html=True)
+            #section = st.text_input("Section Name")
+            #st.markdown('<h4 style="color:black;">Task Description</h4>', unsafe_allow_html=True)
+            #description = st.text_area("Task Description")
+            #st.markdown('<h4 style="color:black;">Assign to</h4>', unsafe_allow_html=True)
+            #assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
+            #submit = st.form_submit_button("Allot Task")
+            #if submit:
+                #insert_task(section, description, assigned_to)
+                #st.success("Task allotted successfully!")
+        with tab2:
+            st.subheader("All Section Tasks: Oversight Dashboard")
+            tasks = fetch_tasks()
+            if tasks:
+                df = pd.DataFrame(tasks)
+                if "_id" in df.columns:
+                    df = df.drop(columns=["_id"])
+                st.dataframe(df.style.applymap(
+                    lambda v: 'color: green' if v == 'Completed' else
+                    ('color: orange' if v == 'In Progress' else 'color: red'),
+                    subset=['status']
+                ))
+            else:
+                st.info("No tasks found.")
+
+
+        
+        #st.subheader("All Section Tasks: Oversight Dashboard")
+        #tasks = fetch_tasks()
+        #if tasks:
+            #df = pd.DataFrame(tasks)
+            #if "_id" in df.columns:
+                #df = df.drop(columns=["_id"])
+            #st.dataframe(df.style.applymap(
+                #lambda v: 'color: green' if v == 'Completed' else
+                #('color: orange' if v == 'In Progress' else 'color: red'),
+                #subset=['status']
+            #))
+        #else:
+            #st.info("No tasks found.")
 
     elif st.session_state.role == "section_ic":
         st.subheader("Your Section's Tasks")
