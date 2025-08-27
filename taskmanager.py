@@ -101,8 +101,11 @@ if st.session_state.get("logged_in"):
         ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
 
         with st.form(key="allot_task_form"):
+            st.markdown("Enter Section Name")
             section = st.text_input("Section Name")
+            st.markdown("Enter Task to be Assigned")
             description = st.text_area("Task Description")
+            st.markdown("Assigned to")
             assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
             submit = st.form_submit_button("Allot Task")
             if submit:
