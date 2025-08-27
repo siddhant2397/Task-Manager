@@ -89,15 +89,19 @@ if login_btn:
         st.sidebar.success(f"Welcome, {user['username']}!")
     else:
         st.sidebar.error("Incorrect credentials!")
+def logout_callback():
+    st.session_state.logged_in = False
+    st.session_state.username = None
+    st.session_state.role = None
+
+    # Reset inputs before rerun
+    st.session_state.login_username = ""
+    st.session_state.login_password = ""
+
+# Logout button with callback
 if st.session_state.get("logged_in"):
-    if st.sidebar.button("Logout"):
-        # Clear session state to log out
-        st.session_state.logged_in = False
-        st.session_state.username = None
-        st.session_state.role = None
-        st.session_state["login_username"] = ""
-        st.session_state["login_password"] = ""
-        st.rerun()  # Refresh page to show login screen
+    if st.sidebar.button("Logout", on_click=logout_callback):
+        st.rerun()
 
 
 # Main App workflow
