@@ -136,9 +136,9 @@ if st.session_state.get("logged_in"):
             st.subheader("Allot a New Task to Section I/C")
             ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
             with st.form(key="allot_task_form"):
-                section = st.text_input("Section Name")
+                section = st.text_input("Coy. Name")
                 description = st.text_area("Task Description")
-                assigned_to = st.selectbox("Assign To (Section I/C Username)", ic_list)
+                assigned_to = st.selectbox("Assign To (Username)", ic_list)
                 submit = st.form_submit_button("Allot Task")
                 if submit:
                     insert_task(section, description, assigned_to)
@@ -160,42 +160,7 @@ if st.session_state.get("logged_in"):
             else:
                 st.info("No tasks found.")
 
-        with tab3:
-            tasks_cursor = db[TASKS_COLLECTION].find({})
-            tasks_list = list(tasks_cursor)
-            df = pd.DataFrame(tasks_list)
-            df['assigned_date'] = pd.to_datetime(df['assigned_date'], errors='coerce')
-            df['completed_date'] = pd.to_datetime(df['last_update'], errors='coerce')
-            
-            pending_counts = df[df['status'] == 'Pending'].groupby('section').size()
-            fig1, ax1 = plt.subplots()
-            pending_counts.plot(kind='bar', ax=ax1, color='orange')
-            ax1.set_title("Pending Tasks by Section")
-            ax1.set_xlabel("Section")
-            ax1.set_ylabel("Number of Pending Tasks")
-            
-            df_completed = df[df['status'] == 'Completed'].copy()
-            df_completed['completion_time'] = (df_completed['completed_date'] - df_completed['assigned_date']).dt.days
-            df_completed['month'] = df_completed['completed_date'].dt.to_period('M').dt.to_timestamp()
-            avg_completion = df_completed.groupby(['month', 'section'])['completion_time'].mean().unstack()
-            fig2, ax2 = plt.subplots()
-            avg_completion.plot(ax=ax2)
-            ax2.set_title("Average Completion Time per Month by Section")
-            ax2.set_xlabel("Month")
-            ax2.set_ylabel("Average Completion Time (days)")
-            
-            total_tasks = df.groupby('section').size()
-            completed_tasks = df[df['status'] == 'Completed'].groupby('section').size()
-            completion_pct = (completed_tasks / total_tasks * 100).fillna(0)
-            fig3, ax3 = plt.subplots()
-            completion_pct.plot(kind='bar', ax=ax3, color='green')
-            ax3.set_title("Task Completion Percentage by Section")
-            ax3.set_xlabel("Section")
-            ax3.set_ylabel("Completion Percentage (%)")
-            st.pyplot(fig1)
-            st.pyplot(fig2)
-            st.pyplot(fig3)
-
+        
         
         
     elif st.session_state.role == "section_ic":
@@ -207,7 +172,7 @@ if st.session_state.get("logged_in"):
             for task in tasks_sorted:
                 with st.form(key=f"form_{task['_id']}"):
                     st.markdown(f'<h6 style="color:black;">Assigned Task : {task["description"]}</h6>', unsafe_allow_html=True)
-                    st.markdown(f'<h6 style="color:black;">Section : {task["section"]}</h6>', unsafe_allow_html=True)
+                    st.markdown(f'<h6 style="color:black;">Coy. name : {task["section"]}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Assigned Date : {task.get("assigned_date", "-")}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Last Updated on : {task.get('last_update', '-')}</h6>', unsafe_allow_html=True)
                     st.markdown(f'<h6 style="color:black;">Task Status : {task['status']}</h6>', unsafe_allow_html=True)
