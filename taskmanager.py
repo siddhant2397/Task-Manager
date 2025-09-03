@@ -131,7 +131,7 @@ if st.session_state.get("logged_in"):
     db = get_db()
 
     if st.session_state.role == "officer":
-        tab1, tab2, tab3 = st.tabs(["Task Assignment", "Dashboard", "Analysis"])
+        tab1, tab2 = st.tabs(["Task Assignment", "Dashboard"])
         with tab1:
             st.subheader("Allot a New Task to Section I/C")
             ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
