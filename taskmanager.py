@@ -133,7 +133,7 @@ if st.session_state.get("logged_in"):
     if st.session_state.role == "officer":
         tab1, tab2 = st.tabs(["Task Assignment", "Dashboard"])
         with tab1:
-            st.subheader("Allot a New Task to Section I/C")
+            st.subheader("Allot a New Task")
             ic_list = [user["username"] for user in db[USERS_COLLECTION].find({"role": "section_ic"})]
             with st.form(key="allot_task_form"):
                 section = st.text_input("Coy. Name")
