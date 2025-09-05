@@ -164,7 +164,7 @@ if st.session_state.get("logged_in"):
         
         
     elif st.session_state.role == "section_ic":
-        st.subheader("Your Section's Tasks")
+        st.subheader("Your Tasks")
         tasks = fetch_tasks(assigned_to=st.session_state.username)
         status_order = {"Pending": 0, "Completed": 1}
         tasks_sorted = sorted(tasks, key=lambda task: status_order.get(task['status'], 99))
