@@ -88,6 +88,8 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 def on_login():
+    username = st.session_state.login_username
+    password = st.session_state.login_password
     user = login_user(username)
     if user and verify_password(st.session_state.login_password, user["password"]):
         st.session_state.logged_in = True
